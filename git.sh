@@ -24,9 +24,22 @@ validate_input() {
     echo "$input_value"
 }
 
+# 设置工作目录
+echo
+echo "📁 设置工作目录"
+default_work_dir="./"
+work_dir=$(validate_input "请输入工作目录路径 (默认: $default_work_dir): " "目录不能为空" 1)
+if [[ -z "$work_dir" ]]; then
+    work_dir=$default_work_dir
+fi
+
+# 确保目录存在
+mkdir -p "$work_dir"
+cd "$work_dir" || { echo "❌ 无法进入目录 $work_dir"; exit 1; }
+
 # 设置 Git 用户邮箱
 echo
-echo "🔧 配置 Git 用户邮箱为 xxxxxxx@qq.com"
+echo "🔧 配置 Git 用户邮箱为 xxxxxx@qq.com"
 git config --global user.email "xxxxxxx@qq.com"
 read -p "✅ 按 Enter 继续..."
 
@@ -39,7 +52,7 @@ read -p "✅ 按 Enter 继续..."
 # 添加所有文件 - 改进检测逻辑
 echo
 echo "📦 添加所有文件到暂存区 (git add ./)"
-git add ./git/
+git add ./
 
 # 改进的文件变更检测逻辑
 echo "🔍 检查文件变更..."
@@ -106,7 +119,7 @@ if ! git show-ref --verify --quiet refs/heads/"$branch_name"; then
 fi
 
 # 切换到目标分支 - 修复分离头指针问题
-if [ -n "$current_branch" ] && [ "$current_branch" != "$branch_name" ]; then
+if [ -n "$current_branch" ] && [ "$current极速版_branch" != "$branch_name" ]; then
     echo "↪️ 切换到分支 $branch_name"
     
     # 修复：使用分支名而不是引用路径
@@ -157,7 +170,7 @@ while true; do
     fi
 done
 
-remote_name=$(validate_input "🔖 请输入远程仓库的别名 (例如 origin ): " "别名不能为空")
+remote_name=$(validate_input "🔖 请输入远程仓库的别名 (例如 origin 或 FASTLIO2_ROS2): " "别名不能为空")
 
 # 令牌管理 - 增强版 (全局化和选项化)
 echo
